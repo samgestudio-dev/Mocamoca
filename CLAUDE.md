@@ -27,14 +27,14 @@ README.md                  human-facing summary + demo / animation tables
 .nojekyll                  keep: Pages serves files as-is
 ```
 
-`<slug>` is lowercase-kebab-case, e.g. `landing-page`, `repayment-success`.
+`<slug>` is lowercase-kebab-case, e.g. `dito-landing-page`, `repayment-success`.
 
 ## Adding a demo
 
 1. Put the demo's file(s) in `prototypes/<slug>/` — for a new one, start from a copy of `prototypes/_template/index.html`.
    The recommended variant is `index.html`; name other variants by what differs (`with-blur.html`, `snappy-spring.html`).
    A variant that is the same page opened in another state can be a tiny redirect page
-   (see `prototypes/landing-page/credit-approved.html` → `index.html?show=approved`).
+   (see `prototypes/dito-landing-page/credit-approved.html` → `index.html?show=approved`).
 2. Register it in the `DEMOS` array in the root `index.html` (inside the `<script>`):
 
    ```js
@@ -74,7 +74,7 @@ Renderer: lottie-web SVG (`vendor/lottie-web@5.12.2/lottie_svg.min.js`), not can
 ## Requirements for a demo page
 
 - Phone screens are designed at 360 CSS px wide: on touch devices set the viewport to `width=360` (the template does)
-  and fill the visible height — no phone frame or fake status bar. Websites (like `landing-page`) stay responsive.
+  and fill the visible height — no phone frame or fake status bar. Websites (like `dito-landing-page`) stay responsive.
 - `touch-action: manipulation` on interactive elements.
 - iOS Safari 26+ tints the status bar and toolbar from `position:fixed` layers that reach the screen edges: a closed
   modal / scrim must be `display:none`, not just invisible (see the landing page's `.approve` popup).

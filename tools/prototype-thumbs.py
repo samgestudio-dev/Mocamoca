@@ -16,7 +16,7 @@ from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WIDTH = 270                     # stored width (px); shown at ~64 CSS px, so this covers 3x screens
-WAIT = {'landing-page': 2500}
+WAIT = {'dito-landing-page': 2500}
 DEFAULT_WAIT = 2500
 
 
