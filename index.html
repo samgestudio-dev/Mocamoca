@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F1F7F5">
+<title>MocaMoca Playground</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  html,body{margin:0;background:#F1F7F5}
+  #root:empty::after{content:"";display:block;height:100vh}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="vendor/react@18.3.1/react.production.min.js"></script>
+<script src="vendor/react-dom@18.3.1/react-dom.production.min.js"></script>
+<script src="vendor/motion@14.4.0/motion-react.js"></script>
+<script src="vendor/mui-material@5.18.0/material-ui.production.min.js"></script>
+<script src="assets/playground-ui.js?v=202610260938"></script>
+<script src="animations/animations.js?v=202610260938"></script>
+<script>
+/* ---- Prototype registry (the "Prototypes" tab) -----------------------------------------
+   To add a prototype: put its files in prototypes/<slug>/ and add one entry below.
+   The first variant is the recommended one. Animations live in animations/animations.js. */
+var DEMOS = [
+  {
+    title: 'First installment, zero interest',
+    tag: 'Landing page',
+    desc: 'dito campaign page “Walang interes sa unang hulog”: sign-up form (phone + OTP) → credit check → “Approved ka na!” popup with the limit counting up to ₱50,000 and the withdraw button.',
+    variants: [
+      { name: 'Standard', note: 'Full flow: enter any 9XX number and a 4-digit code, then tap “Mag-MocaMoca na!”', href: 'prototypes/landing-page/index.html' },
+      { name: 'Credit approved popup', note: 'Opens straight on the popup (photo header, limit ticket, “I-withdraw na!”)', href: 'prototypes/landing-page/credit-approved.html' }
+    ]
+  }
+];
+
+</script>
+<script>
+/* ---- Picker UI (Material UI + Motion, see assets/playground-ui.js) ------------------------
+   Two tabs: Prototypes (DEMOS above) and Animations (window.LOTTIES). #animations in the URL
+   opens the Animations tab (#lottie still accepted), so "back" from the player lands there.
+   Motion: the tab pill slides with a shared layoutId, panels swap with AnimatePresence and
+   their cards come in with a short stagger, every pressable has spring tap feedback, and cards
+   that change size animate their layout. */
+(function(){
+  var M = MaterialUI, R = React, h = PG.h, Icon = PG.Icon, C = PG.C;
+  var Mo = PG.Mo, m = PG.m, T = PG.T, TAP = PG.TAP, AP = Mo.AnimatePresence;
+  var LOTTIES = window.LOTTIES || [];
+  var FONT = '"Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+  var SH1 = PG.theme.shadows[1], SH2 = PG.theme.shadows[2];
+
+  // Links carry the deploy stamp, so a phone never reopens a page from a stale cache after an update.
+  function fresh(u){ return PG.v ? u + (u.indexOf('?') < 0 ? '?' : '&') + 'v=' + PG.v : u; }
+  function fromHash(){ return /^#(animations|lottie)$/.test(location.hash) ? 1 : 0; }
+
+  /* Segmented tabs: the white pill is one shared element (layoutId) that springs between tabs. */
+  function Segmented(p){
+    var tabs = [[Icon.touch, 'Prototypes', DEMOS.length], [Icon.animation, 'Animations', LOTTIES.length]];
+    return h('div', { role: 'tablist', 'aria-label': 'Library',
+        style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, padding: 4, borderRadius: 16, background: C.track } },
+      tabs.map(function(t, i){
+        var on = p.value === i;
+        return h(m.button, { key: t[1], type: 'button', role: 'tab', 'aria-selected': on ? 'true' : 'false',
+            onClick: function(){ p.onChange(i); }, whileTap: { scale: 0.97 }, transition: T.snap,
+            style: { position: 'relative', height: 40, border: 0, padding: 0, borderRadius: 12, background: 'transparent', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              font: '600 14px/20px ' + FONT, touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' } },
+          on ? h(m.span, { layoutId: 'tab-pill', transition: T.ui, style: { position: 'absolute', inset: 0, borderRadius: 12, background: '#fff', boxShadow: SH2 } }) : null,
+          h(m.span, { animate: { color: on ? C.ink : C.sub }, transition: T.fade,
+              style: { position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, height: 20 } },
+            h(t[0], { sx: { fontSize: 18, display: 'block', flex: 'none' } }),
+            h('span', { style: { display: 'block', lineHeight: '20px' } }, t[1]),
+            h(m.span, { animate: { backgroundColor: on ? C.brand50 : 'rgba(20,30,36,0.06)', color: on ? C.brand : C.sub }, transition: T.fade,
+              style: { display: 'block', font: '700 11px/16px ' + FONT, padding: '0 6px', borderRadius: 99 } }, t[2])));
+      }));
+  }
+
+  function Tag(p){
+    return h(M.Chip, { size: 'small', label: p.label, sx: { bgcolor: C.brand50, color: 'primary.main', border: '1px solid ' + C.brand200 } });
+  }
+
+  /* Screenshot of a prototype, made by tools/prototype-thumbs.py:
+     prototypes/<slug>/index.html → preview.webp, <name>.html → preview-<name>.webp (or d.thumb). */
+  function thumbOf(href){
+    var i = href.lastIndexOf('/'), dir = href.slice(0, i + 1), stem = href.slice(i + 1).replace(/\.html$/, '');
+    return dir + (stem === 'index' ? 'preview.webp' : 'preview-' + stem + '.webp');
+  }
+  function Thumb(p){
+    var s = R.useState(true), ok = s[0], setOk = s[1];
+    if (!ok) return null;
+    return h('img', { src: p.src, alt: '', loading: 'lazy', decoding: 'async', onError: function(){ setOk(false); },
+      style: { display: 'block', flex: 'none', width: 56, aspectRatio: '270 / 584', objectFit: 'cover', objectPosition: 'top', alignSelf: 'center',
+        borderRadius: 10, background: '#fff', boxShadow: '0 0 0 1px rgba(20,30,36,0.08), 0 2px 6px rgba(16,24,40,0.08)' } });
+  }
+
+  var item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: T.ui } };
+
+  /* Prototype card: one screenshot per card (the recommended option), beside the option rows —
+     a single option gives the usual thumb + row, several options share the one screenshot. */
+  function PrototypeCard(p){
+    var d = p.d, many = d.variants.length > 1;
+    return h(m.article, { variants: item, layout: true, transition: { layout: T.layout },
+        style: { borderRadius: 22, background: '#fff', boxShadow: SH2, overflow: 'hidden' } },
+      h(m.div, { layout: 'position', transition: { layout: T.layout }, style: { padding: '16px 16px 12px' } },
+        h('div', { style: { display: 'flex', gap: 12, alignItems: 'flex-start' } },
+          h('div', { style: { flex: 1, minWidth: 0 } },
+            h(M.Typography, { variant: 'h6', component: 'h2' }, d.title),
+            h(M.Typography, { variant: 'body2', color: 'text.secondary', sx: { mt: 0.5 } }, d.desc)),
+          d.tag ? h(Tag, { label: d.tag }) : null)),
+      h(m.div, { layout: 'position', transition: { layout: T.layout },
+          style: { display: 'flex', gap: 12, margin: '0 10px 10px', padding: 8, borderRadius: 16, background: C.soft } },
+        h(Thumb, { src: fresh(d.thumb || thumbOf(d.variants[0].href)) }),
+        h('div', { style: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 6 } },
+          d.variants.map(function(v, i){
+            return h(m.a, { key: v.href, href: fresh(v.href), whileTap: { scale: 0.98 }, transition: T.snap,
+                style: { display: 'flex', alignItems: 'center', gap: 8, padding: '8px 6px 8px 8px', borderRadius: 12, textDecoration: 'none',
+                  color: C.ink, background: many ? '#fff' : 'transparent', boxShadow: many ? '0 0 0 1px rgba(20,30,36,0.05)' : 'none',
+                  touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' } },
+              h('span', { style: { flex: 1, minWidth: 0 } },
+                h('span', { style: { display: 'flex', alignItems: 'center', gap: 6, font: '600 14px/20px ' + FONT } },
+                  v.name,
+                  i === 0 && many ? h('span', { style: { font: '600 10px/16px ' + FONT, color: '#fff', background: C.brand, borderRadius: 99, padding: '1px 7px' } }, 'Recommended') : null),
+                v.note ? h('span', { style: { display: 'block', marginTop: 2, font: '400 12px/16px ' + FONT, color: C.sub } }, v.note) : null),
+              h('span', { style: { flex: 'none', width: 30, height: 30, borderRadius: 15, display: 'grid', placeItems: 'center', background: '#fff', color: C.sub, boxShadow: SH1 } },
+                h(Icon.next, { sx: { fontSize: 20 } })));
+          }))));
+  }
+
+  function AnimationCard(p){
+    var a = p.a;
+    var how = a.success ? 'Loading → success' : a.intro ? 'Intro → loop' : 'Plays once';
+    return h(m.a, { variants: item, href: fresh('animations/player.html?a=' + encodeURIComponent(a.slug)), whileTap: { scale: 0.97 },
+        transition: T.snap,
+        style: { display: 'block', minWidth: 0, borderRadius: 22, background: '#fff', boxShadow: SH2, overflow: 'hidden', textDecoration: 'none', color: C.ink,
+          touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' } },
+      h('img', { src: fresh('animations/' + a.slug + '/' + a.preview), alt: '', loading: 'lazy', decoding: 'async',
+        style: { display: 'block', width: '100%', aspectRatio: '4 / 3', objectFit: 'contain', padding: 6, background: '#fff' } }),
+      h('div', { style: { padding: '10px 12px 12px', borderTop: '1px solid rgba(20,30,36,0.06)' } },
+        h(M.Typography, { variant: 'subtitle2', sx: { display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' } }, a.title),
+        h(M.Typography, { variant: 'caption', color: 'text.secondary', noWrap: true, sx: { display: 'block', mt: 0.5 } },
+          how + (a.gsap ? '' : ' · Lottie only'))));
+  }
+
+  /* Prototypes / Animations switch sticks to the top once scrolled to. Plain page colour behind it
+     (fades in with Motion). It sits below the status bar: the negative margin + equal padding keep
+     its resting position, and the padding (same colour) covers the status-bar area while stuck. */
+  function StickyTabs(p){
+    var s = R.useState(false), stuck = s[0], setStuck = s[1], ref = R.useRef(null);
+    R.useEffect(function(){
+      var on = false, raf = 0;
+      function check(){
+        raf = 0; if (!ref.current) return;
+        var v = ref.current.getBoundingClientRect().top <= 0.5 && window.scrollY > 0;
+        if (v !== on) { on = v; setStuck(v); }
+      }
+      function onScroll(){ if (!raf) raf = requestAnimationFrame(check); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      check();
+      return function(){ window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
+    }, []);
+    return h(m.div, { ref: ref, initial: false, animate: { backgroundColor: stuck ? 'rgba(241,247,245,1)' : 'rgba(241,247,245,0)' }, transition: T.fade,
+        style: { position: 'sticky', top: 0, zIndex: 5, margin: 'calc(-1 * env(safe-area-inset-top, 0px)) -16px 0', padding: 'calc(env(safe-area-inset-top, 0px) + 8px) 16px 8px',
+          pointerEvents: 'none' } },
+      h('div', { style: { pointerEvents: 'auto' } }, p.children));
+  }
+
+  function App(){
+    var s = R.useState(fromHash()), tab = s[0], setTab = s[1];
+    R.useEffect(function(){
+      function onHash(){ setTab(fromHash()); }
+      window.addEventListener('hashchange', onHash);
+      return function(){ window.removeEventListener('hashchange', onHash); };
+    }, []);
+    function pick(v){
+      setTab(v);
+      try { history.replaceState(null, '', v === 1 ? '#animations' : location.pathname + location.search); } catch (e) {}
+    }
+    var list = { hidden: {}, show: { transition: { staggerChildren: 0.045, delayChildren: 0.02 } } };
+    return h(M.Container, { maxWidth: 'sm', disableGutters: true, sx: {
+        px: 2, pt: 'calc(env(safe-area-inset-top, 0px) + 32px)', pb: 'calc(env(safe-area-inset-bottom, 0px) + 32px)', maxWidth: 520 } },
+      h(m.header, { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, transition: T.ui, style: { padding: '0 4px 24px' } },
+        h(M.Typography, { variant: 'overline', color: 'primary' }, 'MocaMoca'),
+        h(M.Typography, { variant: 'h4', component: 'h1', sx: { mt: 0.25 } }, 'Playground'),
+        h(M.Typography, { variant: 'body1', color: 'text.secondary', sx: { mt: 1 } },
+          'Interactive prototypes and illustration animations, made to be tried on a real phone.')),
+      h(StickyTabs, null, h(Segmented, { value: tab, onChange: pick })),
+      h('div', { style: { height: 16 } }),
+      h(AP, { mode: 'wait', initial: false },
+        tab === 0
+          ? h(m.div, { key: 'p', role: 'tabpanel', 'aria-label': 'Prototypes', variants: list, initial: 'hidden', animate: 'show',
+                exit: { opacity: 0, y: -6, transition: T.out }, style: { display: 'flex', flexDirection: 'column', gap: 12 } },
+              DEMOS.map(function(d){ return h(PrototypeCard, { key: d.title, d: d }); }))
+          : h(m.div, { key: 'a', role: 'tabpanel', 'aria-label': 'Animations', variants: list, initial: 'hidden', animate: 'show',
+                exit: { opacity: 0, y: -6, transition: T.out }, style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 } },
+              LOTTIES.length ? LOTTIES.map(function(a){ return h(AnimationCard, { key: a.slug, a: a }); })
+                : h(m.div, { key: 'empty', variants: item, style: { gridColumn: '1 / -1', padding: '28px 20px', borderRadius: 22, background: '#fff', boxShadow: SH2, textAlign: 'center' } },
+                    h(Icon.animation, { sx: { fontSize: 32, color: C.brand } }),
+                    h(M.Typography, { variant: 'subtitle1', sx: { mt: 1 } }, 'No animations yet'),
+                    h(M.Typography, { variant: 'body2', color: 'text.secondary', sx: { mt: 0.5 } }, 'Lottie and GSAP animations will show here, played one at a time.')))),
+      h(M.Stack, { direction: 'row', spacing: 1, alignItems: 'center', sx: { mt: 3, px: 0.5, color: 'text.secondary' } },
+        h(Icon.phone, { sx: { fontSize: 16 } }),
+        h(M.Typography, { variant: 'caption' }, 'Best viewed on a phone. Animations open one at a time in the player.')));
+  }
+
+  PG.mount(document.getElementById('root'), App);
+})();
+</script>
+</body>
+</html>
