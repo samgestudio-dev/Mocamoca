@@ -18,8 +18,8 @@
 <script src="vendor/react-dom@18.3.1/react-dom.production.min.js"></script>
 <script src="vendor/motion@14.4.0/motion-react.js"></script>
 <script src="vendor/mui-material@5.18.0/material-ui.production.min.js"></script>
-<script src="assets/playground-ui.js?v=202610260952"></script>
-<script src="animations/animations.js?v=202610260952"></script>
+<script src="assets/playground-ui.js?v=202611170306"></script>
+<script src="animations/animations.js?v=202611170306"></script>
 <script>
 /* ---- Prototype registry (the "Prototypes" tab) -----------------------------------------
    To add a prototype: put its files in prototypes/<slug>/ and add one entry below.
@@ -28,10 +28,12 @@ var DEMOS = [
   {
     title: 'dito landing page',
     tag: 'Campaign',
-    desc: 'dito campaign page “Walang interes sa unang hulog”: sign-up form (phone + OTP) → credit check → “Approved ka na!” popup with the limit counting up to ₱50,000 and the withdraw button.',
+    desc: 'dito campaign page “Credit limit up to ₱90,000”: sign-up form (phone + OTP) → credit check → “Approved ka na!” popup with the limit counting up to ₱90,000 and the withdraw button. The earlier zero-interest version is kept below.',
     variants: [
-      { name: 'Standard', note: 'Full flow: enter any 9XX number and a 4-digit code, then tap “Mag-MocaMoca na!”', href: 'prototypes/dito-landing-page/index.html' },
-      { name: 'Credit approved popup', note: 'Opens straight on the popup (photo header, limit ticket, “I-withdraw na!”)', href: 'prototypes/dito-landing-page/credit-approved.html' }
+      { name: 'Up to ₱90,000', note: 'Full flow: enter any 9XX number and a 4-digit code, then tap “Mag-MocaMoca na!”', href: 'prototypes/dito-landing-page/up-to-90k.html' },
+      { name: 'Up to ₱90,000 · approved popup', note: 'Opens straight on the popup (photo header, ₱90,000 limit ticket, “I-withdraw na!”)', href: 'prototypes/dito-landing-page/up-to-90k-approved.html' },
+      { name: 'Zero interest (earlier)', note: '“Walang interes sa unang hulog” version, limit up to ₱50,000', href: 'prototypes/dito-landing-page/index.html' },
+      { name: 'Zero interest · approved popup', note: 'Earlier version, opened on the popup', href: 'prototypes/dito-landing-page/credit-approved.html' }
     ]
   }
 ];

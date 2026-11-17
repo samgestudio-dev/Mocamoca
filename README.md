@@ -9,7 +9,7 @@ Phone-first prototypes and animations for MocaMoca, served with GitHub Pages.
 
 | Demo | Variants |
 | --- | --- |
-| dito landing page | [Standard](prototypes/dito-landing-page/index.html) (sign-up → credit check → approved popup) · [Credit approved popup](prototypes/dito-landing-page/credit-approved.html) (opens on the popup) |
+| dito landing page | [Up to ₱90,000](prototypes/dito-landing-page/up-to-90k.html) (sign-up → credit check → approved popup) · [Up to ₱90,000 · approved popup](prototypes/dito-landing-page/up-to-90k-approved.html) · earlier zero-interest version: [Standard](prototypes/dito-landing-page/index.html) · [Approved popup](prototypes/dito-landing-page/credit-approved.html) |
 
 ## Animations
 
