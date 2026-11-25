@@ -25,6 +25,10 @@ vendor/<lib>@<version>/    pinned libraries: lottie-web, gsap (+ plugins; esm/ =
                            motion (motion-react.js = React API, motion.js = vanilla; both set window.Motion), matter-js
 README.md                  human-facing summary + demo / animation tables
 .nojekyll                  keep: Pages serves files as-is
+tokens/                    design tokens pulled from Figma (see "Design tokens" below)
+landing/                   source of the MocaMoca SMS landing page: React 18 + Framer Motion + Vite (has a build step,
+                           so it is a source project, not a Playground demo; not on the picker)
+tools/landing-server.command  one-click local server for landing/ on port 5173 (also prints the phone addresses)
 ```
 
 `<slug>` is lowercase-kebab-case, e.g. `dito-landing-page`, `repayment-success`.
@@ -62,6 +66,33 @@ README.md                  human-facing summary + demo / animation tables
    `prototypes/<slug>/preview.webp`, `preview-<variant>.webp`; adjust its `WAIT` if the first screen needs time).
 4. Add a row to the demo table in `README.md`.
 5. Removing or renaming a demo: update the folder, the `DEMOS` entry and the README row together.
+
+## Design tokens — use v2 by default
+
+- Source: Figma "Mocamoca design system" (file key `6plHhEEqEpg1OmDGSiyjtp`).
+- **Default to the v2 tokens** for all UI work: the `primitives-v2` and `semantic-v2` (light/dark) variable collections,
+  the `v2/*` text styles and the `Shadow/*` effect styles.
+- Everything else is **legacy** and is named that way in Figma (renamed 2026-11-25, same IDs): the collections
+  `legacy/Primitive`, `legacy/Semantic`, `legacy/Component` and the text styles under `legacy/` (`legacy/Display/*`,
+  `legacy/Heading/*`, `legacy/Body/*`, `legacy/Label/*`). Do not use them unless asked; new non-v2 assets go under `legacy/` too.
+- In code, prefer **semantic** tokens (`--color-text-primary`, `--color-bg-surface`, `--spacing-gap-md`, `--radius-card`,
+  `--text-body-m`…) over raw primitives.
+- Files:
+  - `tokens/figma-raw.json`: raw snapshot of every Figma collection/style (legacy included)
+  - `tokens/build-tokens.py`: regenerates `tokens/v2/` from the snapshot (`python3 tokens/build-tokens.py`)
+  - `tokens/v2/*.tokens.json`: DTCG tokens; `tokens/v2/tokens.css` holds the CSS variables (light default, dark via
+    `[data-theme="dark"]` / `prefers-color-scheme`)
+
+## Landing page source (`landing/`)
+
+- MocaMoca SMS landing page: hero from Figma `2850:35688`, loan calculator mock (0.3 % a day, 4 / 6 / 8 terms of 15 days),
+  "Why Choose MocaMoca?" card from Figma `2843:34556`, getting-started steps, closing band. Copy outside the hero and the
+  calculator is MocaMoca's own, deliberately different from PeraSure's.
+- Uses `tokens/v2/tokens.css` (imported from `landing/src/index.css`); light mode only. On phones the 360 px design is
+  enlarged with the screen, at most 1.15× (`landing/public/phone-fit.js`, PeraSure's "cap" rule).
+- Run: double-click `tools/landing-server.command`, or `npm --prefix landing install` once, then `npm --prefix landing run dev`.
+- Placeholders to confirm before launch: the Google Play link (`landing/src/config.ts`) and the amount range (`landing/src/loan.ts`).
+- Design backup in Figma: page "25 nov 2026 - 白名单卖点落地页", Section 1 (plain frames, v2 tokens bound).
 
 ## Adding a Lottie animation
 

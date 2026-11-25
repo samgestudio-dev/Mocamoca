@@ -1,0 +1,163 @@
+/* Figma 2843:34556 at 328 × 396. Raw values are Figma artwork colours with no v2 token:
+   banner teal #28C1A5, tile fill #FAFAFC, label navy #121736, header mint #B2FFF1. */
+.lp-why {
+  --why-banner: #28c1a5;
+  --why-tile: #fafafc;
+  --why-ink: #121736;
+  --why-mint: #b2fff1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px 7px;
+  border-radius: 16px 16px 12px 12px;
+  background:
+    linear-gradient(0deg, var(--color-bg-surface) 0%, var(--why-mint) 300%) top / 100% 34px no-repeat,
+    var(--color-bg-surface);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.02);
+}
+
+.lp-why__title {
+  padding: 16px 9px 16px;
+  font: var(--font-weight-medium) var(--font-size-18) / 18px var(--font-family-roboto);
+  color: var(--color-text-primary);
+}
+
+/* registered users banner: teal with the curved-line texture multiplied at 39 % */
+.lp-why__banner {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 76px;
+  margin: 0 1px;
+  border-radius: var(--radius-md);
+  background: var(--why-banner);
+  box-shadow: 0 0 0 1px var(--why-tile);
+  overflow: hidden;
+  color: var(--color-text-on-color);
+  text-align: center;
+}
+
+.lp-why__banner::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -30% -60% -110% -40%;
+  background: url('../assets/why/banner-texture.jpg') center / cover no-repeat;
+  mix-blend-mode: multiply;
+  opacity: 0.39;
+}
+
+.lp-why__users {
+  font: var(--font-weight-bold) 22px / 20px var(--font-family-roboto);
+  text-shadow: 0 3px 13.4px rgba(0, 140, 70, 0.59);
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-why__users-label {
+  font: var(--font-weight-regular) var(--font-size-12) / 12px var(--font-family-roboto);
+}
+
+/* trust tiles: 149 × 125, white logo area on a #FAFAFC tile */
+.lp-why__tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.lp-why__tile {
+  display: flex;
+  flex-direction: column;
+  min-height: 125px;
+  padding: 1px;
+  border-radius: var(--radius-md);
+  background: var(--why-tile);
+}
+
+.lp-why__tile p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 8px 8px 10px;
+  font: var(--font-weight-regular) var(--font-size-12) / 14px var(--font-family-roboto);
+  color: var(--why-ink);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.lp-why__logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 76px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-surface);
+}
+
+/* National Privacy Commission logo, drawn in brand green through its own alpha (Figma mask group) */
+.lp-why__npc {
+  width: 90px;
+  height: 48px;
+  background: var(--color-bg-brand);
+  -webkit-mask: var(--npc) center / contain no-repeat;
+  mask: var(--npc) center / contain no-repeat;
+}
+
+.lp-why__logo--sec img {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  margin-left: -24px;
+}
+
+.lp-why__logo--sec span {
+  position: relative;
+  font: var(--font-weight-bold) var(--font-size-16) / 16px var(--font-family-roboto);
+  color: var(--color-text-brand);
+  white-space: nowrap;
+}
+
+/* repayment channels */
+.lp-why__repay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  margin-top: 16px;
+}
+
+.lp-why__repay-title {
+  font: var(--text-body-s);
+  color: var(--color-text-secondary);
+}
+
+.lp-why__channels {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  max-width: 257px;
+  padding: 14px 0;
+}
+
+.lp-why__channels li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.lp-why__channels img {
+  border-radius: 4px;
+}
+
+.lp-why__channels span {
+  font: var(--font-weight-regular) var(--font-size-12) / 12px var(--font-family-roboto);
+  color: var(--why-ink);
+  white-space: nowrap;
+}

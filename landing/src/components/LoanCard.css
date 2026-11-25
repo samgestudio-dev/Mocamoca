@@ -1,0 +1,146 @@
+/* Figma 2850:35693. The warm gradient, ticker brown and strip fill are raw marketing colours in Figma (Home/Ticker: "raw colours");
+   the two warm tints have no v2 token, so they stay raw here (ticker brown = --color-orange-800 exactly). */
+:root {
+  --lp-warm-1: #fff1e2;
+  --lp-warm-2: #fff6ee;
+  --lp-warm-strip: #fef8ef;
+}
+.lp-loancard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-gap-xs);
+  width: 100%;
+  padding: var(--spacing-inset-xs) var(--spacing-inset-md) var(--spacing-inset-xl);
+  border-radius: var(--radius-card);
+  background: linear-gradient(180deg, var(--lp-warm-1) 0%, var(--lp-warm-2) 14%, var(--color-bg-surface) 30%);
+  overflow: hidden;
+}
+
+/* Ticker */
+.lp-ticker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--spacing-inset-2xs) var(--spacing-inset-sm) var(--spacing-inset-2xs) var(--spacing-inset-xs);
+  border-radius: var(--radius-lg);
+  max-width: calc(100% + 2 * var(--spacing-inset-md)); /* as in Figma, the line may run into the card's side padding */
+}
+
+.lp-ticker img {
+  flex: none;
+}
+
+.lp-ticker p {
+  font: var(--text-body-s-strong);
+  color: var(--color-orange-800);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Amount panel */
+.lp-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-gap-xs);
+  width: 100%;
+  padding: var(--spacing-inset-md) 0 var(--spacing-inset-sm);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-surface);
+}
+
+.lp-amount__label {
+  font: var(--font-weight-medium) var(--font-size-14) / var(--font-line-height-24) var(--font-family-roboto);
+  color: var(--color-text-primary);
+}
+
+.lp-amount__value {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-gap-2xs);
+  padding: 2px var(--spacing-inset-lg);
+  color: var(--color-text-brand);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.lp-amount__deco {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.lp-amount__cur,
+.lp-amount__int,
+.lp-amount__dec {
+  position: relative;
+}
+
+.lp-amount__cur,
+.lp-amount__dec {
+  font-size: 26px;
+}
+
+.lp-amount__int {
+  font-size: var(--font-size-36);
+}
+
+/* Foot: feature strip with the CTA overlapping its bottom by 12px */
+.lp-loancard__foot {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.lp-features {
+  position: relative;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 0 0 -12px;
+  padding: var(--spacing-inset-xs) var(--spacing-inset-md) var(--spacing-24);
+  border-radius: var(--radius-md);
+  background: var(--lp-warm-strip);
+  overflow: hidden;
+}
+
+.lp-features li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-gap-xs);
+}
+
+.lp-features li span {
+  font: var(--text-body-s);
+  color: var(--color-text-warning);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.lp-features__notch {
+  position: absolute;
+  top: 50%;
+  margin-top: -8px;
+}
+
+.lp-features__notch--l {
+  left: -8px;
+}
+
+.lp-features__notch--r {
+  right: -8px;
+}
+
+.lp-loancard__cta {
+  position: relative;
+  width: 100%;
+}

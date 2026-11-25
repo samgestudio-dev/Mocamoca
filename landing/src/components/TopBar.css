@@ -1,0 +1,31 @@
+.lp-topbar {
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  right: 0;
+  max-width: var(--lp-max);
+  margin: 0 auto;
+  height: calc(var(--lp-nav-h) + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) var(--spacing-inset-md) 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lp-topbar > *:not(.lp-topbar__fill) {
+  position: relative;
+}
+
+.lp-topbar__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg-brand);
+  box-shadow: var(--shadow-default);
+  pointer-events: none;
+}
+
+.lp-topbar__brand {
+  display: inline-flex;
+  text-decoration: none;
+}

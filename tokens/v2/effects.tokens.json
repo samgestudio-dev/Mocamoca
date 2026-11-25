@@ -1,0 +1,73 @@
+{
+  "shadow": {
+    "default": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "#07143c1a",
+          "offsetX": "0px",
+          "offsetY": "0px",
+          "blur": "2px",
+          "spread": "0px"
+        },
+        {
+          "color": "#07143c0f",
+          "offsetX": "0px",
+          "offsetY": "4px",
+          "blur": "12px",
+          "spread": "0px"
+        }
+      ]
+    },
+    "enhenced": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "#07143c29",
+          "offsetX": "0px",
+          "offsetY": "0px",
+          "blur": "4px",
+          "spread": "0px"
+        },
+        {
+          "color": "#07143c1f",
+          "offsetX": "0px",
+          "offsetY": "8px",
+          "blur": "32px",
+          "spread": "0px"
+        }
+      ]
+    },
+    "over": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "#07143c14",
+          "offsetX": "0px",
+          "offsetY": "-4px",
+          "blur": "12px",
+          "spread": "0px"
+        },
+        {
+          "color": "#07143c29",
+          "offsetX": "0px",
+          "offsetY": "0px",
+          "blur": "2px",
+          "spread": "0px"
+        }
+      ]
+    },
+    "brand": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "#0a9c5229",
+          "offsetX": "0px",
+          "offsetY": "6px",
+          "blur": "8px",
+          "spread": "0px"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+.lp-hero {
+  position: relative;
+  isolation: isolate;
+  background: var(--color-bg-default);
+}
+
+/* Illustration/home-hero-bg (2569:17666): 360 × 376 at the 360 design, full width here */
+.lp-hero__bg {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 360 / 376;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.lp-hero__main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-gap-md);
+  padding: calc(var(--lp-nav-h) + var(--spacing-inset-xs)) var(--spacing-inset-md) var(--spacing-inset-xl);
+}
+
+.lp-hero__main > div {
+  width: 100%;
+}

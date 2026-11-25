@@ -1,0 +1,87 @@
+@import '../../tokens/v2/tokens.css';
+
+/* Landing-only values with no v2 token (kept in one place) */
+:root {
+  --lp-max: 600px; /* one mobile column, as the PeraSure landing page */
+  --lp-nav-h: 56px;
+  --lp-deep: var(--color-brand-800); /* the calculator result and closing band: deep brand green */
+  --lp-on-deep-soft: rgba(255, 255, 255, 0.78);
+  --lp-on-deep-faint: rgba(255, 255, 255, 0.6);
+  --lp-on-deep-line: rgba(255, 255, 255, 0.14);
+  --lp-shadow-card: var(--shadow-default);
+  --lp-shadow-cta: var(--shadow-brand);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light only; /* no dark mode: native controls, scrollbars and browser auto-darkening stay light */
+  -webkit-text-size-adjust: 100%;
+  background: var(--color-bg-muted);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-roboto);
+  color: var(--color-text-primary);
+  background: var(--color-bg-muted);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p,
+ol,
+ul,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-border-brand);
+  outline-offset: 2px;
+}
+
+.lp-page {
+  position: relative;
+  max-width: var(--lp-max);
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--color-bg-default);
+  overflow-x: clip;
+}
+
+@media (min-width: 601px) {
+  .lp-page {
+    box-shadow: var(--shadow-default);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.lp-footer {
+  padding: var(--spacing-gap-xl) 0 env(safe-area-inset-bottom);
+  border-top: 1px solid var(--lp-on-deep-line);
+}

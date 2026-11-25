@@ -1,0 +1,167 @@
+#!/usr/bin/env python3
+"""Build v2 design tokens (DTCG JSON + CSS) from tokens/figma-raw.json.
+
+Only the v2 sources are built: primitives-v2, semantic-v2 (light/dark),
+v2/* text styles and Shadow/* effect styles. The legacy collections
+(legacy/Primitive, legacy/Semantic, legacy/Component) and the legacy/* text
+styles remain in figma-raw.json for reference.
+
+Usage: python3 tokens/build-tokens.py
+"""
+import json
+import os
+import re
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+RAW = json.load(open(os.path.join(HERE, "figma-raw.json"), encoding="utf-8"))
+OUT = os.path.join(HERE, "v2")
+os.makedirs(OUT, exist_ok=True)
+
+PRIM = "primitives-v2"
+SEM = "semantic-v2"
+WEIGHTS = {"Regular": 400, "Medium": 500, "SemiBold": 600, "Semi Bold": 600, "Bold": 700, "Black": 900}
+
+
+def slug(s):
+    return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+
+
+def css_var(path):
+    return "--" + "-".join(slug(p) for p in path.split("/"))
+
+
+def dtcg_type(name, rtype):
+    if rtype == "COLOR":
+        return "color"
+    if name.startswith("font/family"):
+        return "fontFamily"
+    if name.startswith("font/weight"):
+        return "fontWeight"
+    if rtype == "FLOAT":
+        return "dimension"
+    return "string"
+
+
+def dtcg_value(name, rtype, v):
+    if rtype == "FLOAT":
+        return f"{v}px"
+    if name.startswith("font/weight"):
+        return WEIGHTS.get(v, v)
+    return v
+
+
+def css_value(name, rtype, v):
+    if rtype == "FLOAT":
+        return f"{v}px"
+    if name.startswith("font/weight"):
+        return str(WEIGHTS.get(v, v))
+    if name.startswith("font/family"):
+        return f'"{v}", system-ui, sans-serif'
+    return v
+
+
+def put(tree, path, leaf):
+    node = tree
+    parts = path.split("/")
+    for p in parts[:-1]:
+        node = node.setdefault(p, {})
+    node[parts[-1]] = leaf
+
+
+def dump(name, data):
+    with open(os.path.join(OUT, name), "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+
+
+# ---------- primitives ----------
+prim = RAW["collections"][PRIM]
+prim_types = {}
+prim_tree, prim_css = {}, []
+for name, rtype, vals in prim["variables"]:
+    v = vals["value"]
+    prim_types[name] = rtype
+    put(prim_tree, name, {"$type": dtcg_type(name, rtype), "$value": dtcg_value(name, rtype, v)})
+    prim_css.append(f"  {css_var(name)}: {css_value(name, rtype, v)};")
+dump("primitives.tokens.json", prim_tree)
+
+# ---------- semantic (light / dark) ----------
+sem = RAW["collections"][SEM]
+sem_css = {m: [] for m in sem["modes"]}
+for mode in sem["modes"]:
+    tree = {}
+    for name, rtype, vals in sem["variables"]:
+        v = vals[mode]
+        if isinstance(v, dict) and "alias" in v:
+            target = v["alias"].split("/", 1)[1]
+            ref = "{" + target.replace("/", ".") + "}"
+            put(tree, name, {"$type": dtcg_type(target, rtype), "$value": ref})
+            # skip identity aliases (e.g. radius/full -> radius/full) to avoid circular CSS vars
+            if css_var(name) != css_var(target):
+                sem_css[mode].append(f"  {css_var(name)}: var({css_var(target)});")
+        else:
+            put(tree, name, {"$type": dtcg_type(name, rtype), "$value": dtcg_value(name, rtype, v)})
+            sem_css[mode].append(f"  {css_var(name)}: {css_value(name, rtype, v)};")
+    dump(f"semantic.{mode}.tokens.json", tree)
+
+# only the dark values that differ from light need overriding
+light_map = dict(l.split(":", 1) for l in sem_css["light"])
+dark_diff = [l for l in sem_css["dark"] if light_map.get(l.split(":", 1)[0]) != l.split(":", 1)[1]]
+
+# ---------- typography (v2 only) ----------
+typo_tree, typo_css, typo_classes = {}, [], []
+for t in RAW["textStyles"]:
+    if not t["name"].startswith("v2/"):
+        continue
+    key = slug(t["name"][3:])
+    w = WEIGHTS.get(t["style"], 400)
+    typo_tree[key] = {
+        "$type": "typography",
+        "$value": {
+            "fontFamily": "{font.family.roboto}",
+            "fontWeight": w,
+            "fontSize": f"{t['size']}px",
+            "lineHeight": f"{t['lineHeight']}px",
+            "letterSpacing": "0px",
+        },
+    }
+    typo_css.append(f"  --text-{key}: {w} {t['size']}px/{t['lineHeight']}px var(--font-family-roboto);")
+    typo_classes.append(f".text-{key} {{ font: var(--text-{key}); }}")
+dump("typography.tokens.json", {"text": typo_tree})
+
+# ---------- shadows ----------
+fx_tree, fx_css = {}, []
+for e in RAW["effectStyles"]:
+    key = slug(e["name"].split("/", 1)[1])
+    layers = [{"color": s["color"], "offsetX": f"{s['x']}px", "offsetY": f"{s['y']}px",
+               "blur": f"{s['blur']}px", "spread": f"{s['spread']}px"} for s in e["effects"]]
+    fx_tree[key] = {"$type": "shadow", "$value": layers}
+    css = ", ".join(f"{s['x']}px {s['y']}px {s['blur']}px {s['spread']}px {s['color']}" for s in e["effects"])
+    fx_css.append(f"  --shadow-{key}: {css};")
+dump("effects.tokens.json", {"shadow": fx_tree})
+
+# ---------- CSS ----------
+css = [
+    "/* Mocamoca design tokens v2 — generated by tokens/build-tokens.py from Figma. Do not edit by hand. */",
+    "",
+    "/* Primitives */",
+    ":root {", *prim_css, "}",
+    "",
+    "/* Semantic — light (default) */",
+    ":root {", *sem_css["light"], "", *typo_css, "", *fx_css, "}",
+    "",
+    "/* Semantic — dark */",
+    '[data-theme="dark"] {', *dark_diff, "}",
+    "@media (prefers-color-scheme: dark) {",
+    '  :root:not([data-theme="light"]) {', *["  " + l for l in dark_diff], "  }",
+    "}",
+    "",
+    "/* Typography helpers */",
+    *typo_classes,
+    "",
+]
+open(os.path.join(OUT, "tokens.css"), "w", encoding="utf-8").write("\n".join(css))
+
+print(f"primitives: {len(prim['variables'])}, semantic: {len(sem['variables'])} x {len(sem['modes'])} modes "
+      f"({len(dark_diff)} dark overrides), text styles: {len(typo_tree)}, shadows: {len(fx_tree)}")
+print("wrote:", ", ".join(sorted(os.listdir(OUT))))

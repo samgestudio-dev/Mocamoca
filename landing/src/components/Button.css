@@ -1,0 +1,52 @@
+.lp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-gap-xs);
+  border-radius: var(--radius-button);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  will-change: transform;
+}
+
+.lp-btn--lg {
+  height: 48px;
+  padding: 0 var(--spacing-inset-xl);
+  font: var(--text-body-l);
+}
+
+.lp-btn--sm {
+  height: 36px;
+  padding: 0 var(--spacing-inset-sm);
+  border-radius: var(--radius-pill);
+  font: var(--text-body-m-strong);
+}
+
+.lp-btn--block {
+  display: flex;
+  width: 100%;
+}
+
+.lp-btn--primary {
+  background: var(--color-action-primary);
+  color: var(--color-text-on-color);
+  box-shadow: var(--lp-shadow-cta);
+}
+
+.lp-btn--primary:active {
+  background: var(--color-action-primary-pressed);
+}
+
+.lp-btn--light {
+  background: var(--color-bg-surface);
+  color: var(--color-text-brand);
+}
+
+@media (hover: hover) {
+  .lp-btn--primary:hover {
+    background: var(--color-action-primary-pressed);
+  }
+}

@@ -1,0 +1,12 @@
+.lp-sticky {
+  position: fixed;
+  z-index: 25;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: var(--lp-max);
+  margin: 0 auto;
+  padding: var(--spacing-inset-sm) var(--spacing-inset-md) calc(var(--spacing-inset-sm) + env(safe-area-inset-bottom));
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-over);
+}

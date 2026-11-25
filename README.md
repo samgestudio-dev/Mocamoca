@@ -17,6 +17,13 @@ None yet. Add one to `animations/<name>/` and register it in `animations/animati
 Animations tab and plays in `animations/player.html?a=<name>` (replay, play/pause, frame scrubber, speed,
 background swatches, Lottie / GSAP switch).
 
+## Source projects (not on the picker)
+
+- `tokens/` — the MocaMoca design tokens pulled from Figma. Use **v2** by default: `tokens/v2/tokens.css` (CSS
+  variables) and `tokens/v2/*.tokens.json` (DTCG). `python3 tokens/build-tokens.py` rebuilds them from `tokens/figma-raw.json`.
+- `landing/` — the MocaMoca SMS landing page in React + Framer Motion (Vite). To run it on this Mac and on a phone,
+  double-click `tools/landing-server.command` (port 5173; it prints the phone address).
+
 ## Shared environment
 
 - `assets/fonts/` — Nunito and Nunito Sans (variable, all weights; Latin + Latin Extended, so ₱ is in the font) with
