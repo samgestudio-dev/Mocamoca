@@ -83,7 +83,7 @@ tools/landing-server.command  one-click local server for landing/ on port 5173 (
   - `tokens/v2/*.tokens.json`: DTCG tokens; `tokens/v2/tokens.css` holds the CSS variables (light default, dark via
     `[data-theme="dark"]` / `prefers-color-scheme`)
 
-## Landing page source (`landing/`)
+## Landing page source (`landing/`) — SMS landing page / 白名单卖点落地页 / 导流落地页
 
 - MocaMoca SMS landing page: hero from Figma `2850:35688`, loan calculator mock (0.3 % a day, 4 / 6 / 8 terms of 15 days),
   "Why Choose MocaMoca?" card from Figma `2843:34556`, getting-started steps, closing band. Copy outside the hero and the

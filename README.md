@@ -21,7 +21,7 @@ background swatches, Lottie / GSAP switch).
 
 - `tokens/` — the MocaMoca design tokens pulled from Figma. Use **v2** by default: `tokens/v2/tokens.css` (CSS
   variables) and `tokens/v2/*.tokens.json` (DTCG). `python3 tokens/build-tokens.py` rebuilds them from `tokens/figma-raw.json`.
-- `landing/` — the MocaMoca SMS landing page in React + Framer Motion (Vite). To run it on this Mac and on a phone,
+- `landing/` — the MocaMoca **SMS landing page** (白名单卖点落地页 / 导流落地页) in React + Framer Motion (Vite). To run it on this Mac and on a phone,
   double-click `tools/landing-server.command` (port 5173; it prints the phone address).
 
 ## Shared environment
