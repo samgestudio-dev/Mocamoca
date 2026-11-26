@@ -119,6 +119,7 @@ Renderer: lottie-web SVG (`vendor/lottie-web@5.12.2/lottie_svg.min.js`), not can
 
 ## Checking before you push
 
+- **Index:** decide whether the file index in `AGENTS.md` needs an edit (see "Keep this index current" there); if it does, update it in this commit.
 - Open the picker and every new link at a phone viewport (e.g. 390×664, touch, DPR 3) and confirm the demo
   loads with no console errors. Tap through the main flow once.
 

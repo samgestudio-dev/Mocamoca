@@ -1,6 +1,32 @@
 # Agent guide
 
-See [CLAUDE.md](CLAUDE.md) — how this repo is laid out, how to add a demo to the picker (`index.html` → `DEMOS`), the requirements for a demo page, and how to publish.
+Full guide: [CLAUDE.md](CLAUDE.md) (layout, adding a demo, tokens, publishing). Start with the index below.
+
+## File index: what you need → where it is
+
+| You need | Open | Notes |
+|---|---|---|
+| SMS landing page (导流落地页) | `landing/` | Vite + React source; see the section below |
+| A demo / prototype | `prototypes/<slug>/index.html` | The list: the `DEMOS` array in `index.html`, or the table in `README.md` |
+| dito campaign landing page | `prototypes/dito-landing-page/` | Not the SMS page |
+| New prototype starting point | `prototypes/_template/index.html` | Not on the picker |
+| Design tokens (CSS variables) | `tokens/v2/tokens.css` | DTCG: `tokens/v2/*.tokens.json`. Rebuild: `python3 tokens/build-tokens.py` |
+| Raw Figma snapshot (legacy included) | `tokens/figma-raw.json` | Use v2, not legacy |
+| Picker page (Playground) | `index.html` + `assets/playground-ui.js` | Theme, colours and icons in `playground-ui.js` |
+| Animations (Lottie / GSAP) | `animations/<slug>/` | Registry: `animations/animations.js`. Player: `animations/player.html?a=<slug>` (none yet) |
+| Fonts | `assets/fonts/` (`fonts.css`) | Nunito (display), Nunito Sans (body) |
+| Libraries | `vendor/<lib>@<version>/` | Pinned; never a CDN |
+| Scripts | `tools/` | `stamp.py` (cache busting), `prototype-thumbs.py` (picker screenshots), `landing-server.command`, Lottie / SVG fixes |
+
+Figma: "Mocamoca design system" `6plHhEEqEpg1OmDGSiyjtp`. Skip `vendor/` and `landing/node_modules/` when searching.
+
+## Keep this index current (owner's rule, 2026-11-26)
+
+On every change, before you commit, decide whether the index above needs an edit. It does when the change:
+adds, moves, renames or removes a file or folder the index names (or one people will ask for by name: a new demo,
+page, component, token file, tool); changes which version or copy is current or superseded; or makes a path or note
+here wrong. Then update the index (and the Layout in CLAUDE.md) **in the same commit**. If none of that applies, leave
+it alone: don't touch the index for edits inside files it already points to. Every path in the index must exist.
 
 ## SMS landing page (导流落地页 / 白名单卖点落地页)
 
